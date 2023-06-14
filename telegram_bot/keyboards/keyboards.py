@@ -50,6 +50,8 @@ class StartMenu:
 @dataclass(frozen=True)
 class StatsMenu:
 
+    get_v_index: int = 5
+
     @classmethod
     def keyboard(cls) -> Union[InlineKeyboardMarkup]:
         keyboard = InlineKeyboardMarkup(row_width=5)
@@ -57,8 +59,7 @@ class StatsMenu:
         marks_list: list = [11, 12, 10, 9, 9, 8, 12, 7, 9, 5, 8, 5, 8, 11, 5, 7, 11, 8, 5, 11, 8, 11, 10, 7, 11]
         value: int = 1
         index: int = 0
-        get_v_index: int = 5
-        page: int = get_v_index / 5
+        page: int = cls.get_v_index / 5
 
         for i in range(0, len(marks_list)):
             marks_list.insert(index, value)
@@ -71,28 +72,28 @@ class StatsMenu:
         marks_dict = dict(marks_list)
 
         keyboard.add(
-            InlineKeyboardButton(text=marks_dict[get_v_index - 4], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[get_v_index - 3], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[get_v_index - 2], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[get_v_index - 1], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[get_v_index], callback_data="null"),
+            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
+            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null"),
+            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 2], callback_data="null"),
+            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 1], callback_data="null"),
+            InlineKeyboardButton(text=marks_dict[cls.get_v_index], callback_data="null"),
         )
 
         if page == 1:
             keyboard.add(
-                InlineKeyboardButton(text="Вперёд »",
+                InlineKeyboardButton(text="Вперёд ▶",
                                      callback_data="forward_control_callback")
             )
         elif page == 5:
             keyboard.add(
-                InlineKeyboardButton(text="« Назад",
+                InlineKeyboardButton(text="◀ Назад",
                                      callback_data="back_control_callback")
             )
         else:
             keyboard.add(
-                InlineKeyboardButton(text="« Назад",
+                InlineKeyboardButton(text="◀ Назад",
                                      callback_data="back_control_callback"),
-                InlineKeyboardButton(text="Вперёд »",
+                InlineKeyboardButton(text="Вперёд ▶",
                                      callback_data="forward_control_callback")
             )
 

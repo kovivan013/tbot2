@@ -14,16 +14,23 @@ async def start(message: Message) -> None:
 async def my_stats(message: Message, state: FSMContext) -> None:
 
     await MainStates.my_stats.set()
+    StatsMenu.get_v_index = 5
     await message.answer(text=f"*📊 Ваша успеваемость:*",
                          reply_markup=StatsMenu.keyboard(),
                          parse_mode="Markdown")
 
 async def stats_control(callback: CallbackQuery, state: FSMContext) -> None:
 
-    if "back" in callback.data:
+
+    if callback.data == "back_control_callback":
+        StatsMenu.get_v_index -= 5
         await callback.message.edit_reply_markup(reply_markup=StatsMenu.keyboard())
-    else:
-        pass
+    elif callback.data == "forward_control_callback":
+        StatsMenu.get_v_index += 5
+        await callback.message.edit_reply_markup(reply_markup=StatsMenu.keyboard())
+
+async def null_callback(callback: CallbackQuery) -> None:
+    await callback.answer(text=f"тест")
 
 def register_main_handlers(dp: Dispatcher) -> None:
     dp.register_message_handler(
@@ -37,4 +44,7 @@ def register_main_handlers(dp: Dispatcher) -> None:
     )
     dp.register_callback_query_handler(
         stats_control, Text(equals="forward_control_callback"), state=MainStates.my_stats
+    )
+    dp.register_callback_query_handler(
+        null_callback, Text(equals='null'),state=["*"]
     )
