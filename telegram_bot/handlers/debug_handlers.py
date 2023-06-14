@@ -1,5 +1,6 @@
 from tbot2.telegram_bot.config import Dispatcher
 from aiogram.types import Message
+from tbot2.telegram_bot.keyboards.keyboards import StartMenu
 from aiogram.dispatcher.storage import FSMContext
 
 async def debug_handler(message: Message, state: FSMContext) -> None:
@@ -9,7 +10,7 @@ async def debug_handler(message: Message, state: FSMContext) -> None:
         await state.finish()
 
     await message.answer(text=f"*Перед вами главное меню:*",
-                         reply_markup=None,
+                         reply_markup=StartMenu.keyboard(),
                          parse_mode="Markdown")
 
 def register_debug_handlers(dp: Dispatcher):
