@@ -4,14 +4,19 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.storage import FSMContext
 from tbot2.telegram_bot.keyboards.keyboards import StartMenu, StatsMenu
 from tbot2.telegram_bot.states.states import MainStates
+from tbot2.telegram_bot.decorators.decorators import private_message
 from tbot2.telegram_bot.handlers.debug_handlers import debug_handler
 
+
+@private_message
 async def start(message: Message) -> None:
 
     await message.answer(text=f"*Главное меню:*",
                          reply_markup=StartMenu.keyboard(),
                          parse_mode="Markdown")
 
+
+@private_message
 async def my_stats(message: Message, state: FSMContext) -> None:
 
     await MainStates.my_stats.set()
@@ -20,6 +25,7 @@ async def my_stats(message: Message, state: FSMContext) -> None:
         data["global_callback_message"] = await message.answer(text=f"*📊 Ваша успеваемость:*",
                                                                reply_markup=StatsMenu.keyboard(),
                                                                parse_mode="Markdown")
+
 
 async def stats_control(callback: CallbackQuery, state: FSMContext) -> None:
 
@@ -32,8 +38,10 @@ async def stats_control(callback: CallbackQuery, state: FSMContext) -> None:
     elif callback.data == "close_control_callback":
         await debug_handler(message=callback.message, state=state)
 
+
 async def null_callback(callback: CallbackQuery) -> None:
     await callback.answer(text=f"тест")
+
 
 def register_main_handlers(dp: Dispatcher) -> None:
     dp.register_message_handler(
