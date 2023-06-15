@@ -5,6 +5,12 @@ from aiogram.dispatcher.storage import FSMContext
 
 async def debug_handler(message: Message, state: FSMContext) -> None:
 
+    async with state.proxy() as data:
+        try:
+            await data["global_callback_message"].delete()
+        except:
+            pass
+
     current_state = await state.get_state()
     if current_state is not None:
         await state.finish()
