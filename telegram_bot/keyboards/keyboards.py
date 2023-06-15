@@ -18,34 +18,29 @@ def default_inline_keyboard() -> InlineKeyboardMarkup:
     )
 
 @dataclass(frozen=True)
-class ControlsMenu:
-
-    @classmethod
-    def keyboard(cls) -> Union[InlineKeyboardMarkup]:
-        keyboard = default_inline_keyboard()
-
-        keyboard.add(
-            InlineKeyboardButton(text="« Назад",
-                                 callback_data="back_control_callback"),
-            InlineKeyboardButton(text="Вперёд »",
-                                 callback_data="forward_control_callback")
-        )
-
-        return keyboard
-@dataclass(frozen=True)
 class StartMenu:
 
-    marks: str = "📊 Моя успеваемость"
+    student: str = "👨‍🎓 Меню ученика"
+    teacher: str = "👨‍🏫 Меню учителя"
 
     @classmethod
     def keyboard(cls) -> Union[ReplyKeyboardMarkup]:
         keyboard = default_keyboard()
 
         keyboard.add(
-            KeyboardButton(text=cls.marks)
+            KeyboardButton(text=cls.student),
+            KeyboardButton(text=cls.teacher)
         )
 
         return keyboard
+
+class TeacherMenu:
+    pass
+
+class StudentMenu:
+
+    my_stats: str = "📊 Моя успеваемость"
+    coming: str = "💥 Coming soon..."
 
 @dataclass(frozen=True)
 class StatsMenu:

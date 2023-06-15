@@ -40,7 +40,7 @@ def register_main_handlers(dp: Dispatcher) -> None:
         start, commands=["start"], state=None
     )
     dp.register_message_handler(
-        my_stats, Text(equals=StartMenu.marks), state=None
+        my_stats, Text(equals=StartMenu.student), state=None
     )
     dp.register_callback_query_handler(
         stats_control, Text(equals="back_control_callback"), state=MainStates.my_stats
