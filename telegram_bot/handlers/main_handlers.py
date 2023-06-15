@@ -3,7 +3,8 @@ from tbot2.telegram_bot.config import bot, Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.storage import FSMContext
 from tbot2.telegram_bot.keyboards.keyboards import StartMenu, StatsMenu
-from tbot2. telegram_bot.states.states import MainStates
+from tbot2.telegram_bot.states.states import MainStates
+from tbot2.telegram_bot.handlers.debug_handlers import debug_handler
 
 async def start(message: Message) -> None:
 
@@ -29,12 +30,7 @@ async def stats_control(callback: CallbackQuery, state: FSMContext) -> None:
         StatsMenu.get_v_index += 5
         await callback.message.edit_reply_markup(reply_markup=StatsMenu.keyboard())
     elif callback.data == "close_control_callback":
-        await state.finish()
-        del_msg = await callback.message.delete()
-        await bot.send_message(chat_id=callback.from_user.id,
-                               text=f"*Перед вами главное меню:*",
-                               parse_mode="Markdown",
-                               reply_markup=StartMenu.keyboard())
+        await debug_handler(message=callback.message, state=state)
 
 async def null_callback(callback: CallbackQuery) -> None:
     await callback.answer(text=f"тест")
