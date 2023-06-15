@@ -8,7 +8,6 @@ from tbot2.telegram_bot.decorators.decorators import private_message
 from tbot2.telegram_bot.handlers.debug_handlers import debug_handler
 
 
-@private_message
 async def start(message: Message) -> None:
 
     await message.answer(text=f"*Главное меню:*",
@@ -16,7 +15,6 @@ async def start(message: Message) -> None:
                          parse_mode="Markdown")
 
 
-@private_message
 async def my_stats(message: Message, state: FSMContext) -> None:
 
     await MainStates.my_stats.set()
