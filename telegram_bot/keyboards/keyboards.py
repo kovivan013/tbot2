@@ -1,5 +1,5 @@
 from typing import Union
-from toolz import partition
+from math import ceil
 from dataclasses import dataclass
 from aiogram.types import (
     ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
@@ -50,51 +50,86 @@ class StartMenu:
 @dataclass(frozen=True)
 class StatsMenu:
 
-    get_v_index: int = 5
+    keyboard_width: int = 5
+    get_v_index: int = keyboard_width
 
     @classmethod
     def keyboard(cls) -> Union[InlineKeyboardMarkup]:
-        keyboard = InlineKeyboardMarkup(row_width=5)
+        keyboard = InlineKeyboardMarkup(row_width=cls.keyboard_width)
 
-        marks_list: list = [11, 12, 10, 9, 9, 8, 12, 7, 9, 5, 8, 5, 8, 11, 5, 7, 11, 8, 5, 11, 8, 11, 10, 7, 11]
-        value: int = 1
-        index: int = 0
-        page: int = cls.get_v_index / 5
+        page: int = cls.get_v_index / cls.keyboard_width
+        marks_list: list = [11,8,10,9,7,9]
+        page_rem: int = ceil(len(marks_list) / cls.keyboard_width)
+        marks_dict: dict = dict.fromkeys(range(1, len(marks_list)+1), None)
 
-        for i in range(0, len(marks_list)):
-            marks_list.insert(index, value)
-            value += 1
-            index += 2
+        for i, v in marks_dict.items():
+            marks_dict[i] = marks_list[i - 1]
 
-        tpl = list(partition(2, marks_list))
-        marks_list.clear()
-        [marks_list.append(list(i)) for i in tpl]
-        marks_dict = dict(marks_list)
-
-        keyboard.add(
-            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 2], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 1], callback_data="null"),
-            InlineKeyboardButton(text=marks_dict[cls.get_v_index], callback_data="null"),
-        )
-
-        if page == 1:
+        try:
             keyboard.add(
-                InlineKeyboardButton(text="Вперёд ▶",
-                                     callback_data="forward_control_callback")
+                InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
+                InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null"),
+                InlineKeyboardButton(text=marks_dict[cls.get_v_index - 2], callback_data="null"),
+                InlineKeyboardButton(text=marks_dict[cls.get_v_index - 1], callback_data="null"),
+                InlineKeyboardButton(text=marks_dict[cls.get_v_index], callback_data="null")
             )
-        elif page == 5:
+        except KeyError:
+            try:
+                keyboard.add(
+                    InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
+                    InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null"),
+                    InlineKeyboardButton(text=marks_dict[cls.get_v_index - 2], callback_data="null"),
+                    InlineKeyboardButton(text=marks_dict[cls.get_v_index - 1], callback_data="null")
+                )
+            except KeyError:
+                try:
+                    keyboard.add(
+                        InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
+                        InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null"),
+                        InlineKeyboardButton(text=marks_dict[cls.get_v_index - 2], callback_data="null")
+                    )
+                except KeyError:
+                    try:
+                        keyboard.add(
+                            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null"),
+                            InlineKeyboardButton(text=marks_dict[cls.get_v_index - 3], callback_data="null")
+                        )
+                    except KeyError:
+                        try:
+                            keyboard.add(
+                                InlineKeyboardButton(text=marks_dict[cls.get_v_index - 4], callback_data="null")
+                            )
+                        except:
+                            pass
+
+        if page == 1 and page_rem == 1:
             keyboard.add(
-                InlineKeyboardButton(text="◀ Назад",
-                                     callback_data="back_control_callback")
+                InlineKeyboardButton(text=f"Закрыть ✖",
+                                     callback_data="close_control_callback")
             )
         else:
-            keyboard.add(
-                InlineKeyboardButton(text="◀ Назад",
-                                     callback_data="back_control_callback"),
-                InlineKeyboardButton(text="Вперёд ▶",
-                                     callback_data="forward_control_callback")
-            )
+            if page == 1:
+                keyboard.add(
+                    InlineKeyboardButton(text=f"Закрыть ✖",
+                                         callback_data="close_control_callback"),
+                    InlineKeyboardButton(text="Вперёд ▶",
+                                         callback_data="forward_control_callback")
+                )
+            elif page == page_rem:
+                keyboard.add(
+                    InlineKeyboardButton(text="◀ Назад",
+                                         callback_data="back_control_callback"),
+                    InlineKeyboardButton(text=f"Закрыть ✖",
+                                         callback_data="close_control_callback")
+                )
+            else:
+                keyboard.add(
+                    InlineKeyboardButton(text="◀ Назад",
+                                         callback_data="back_control_callback"),
+                    InlineKeyboardButton(text=f"Закрыть ✖",
+                                         callback_data="close_control_callback"),
+                    InlineKeyboardButton(text="Вперёд ▶",
+                                         callback_data="forward_control_callback")
+                )
 
         return keyboard
