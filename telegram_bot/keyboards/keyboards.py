@@ -14,14 +14,14 @@ def default_keyboard() -> ReplyKeyboardMarkup:
 
 def default_inline_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
-        row_width=2
+        row_width=1
     )
 
 @dataclass(frozen=True)
 class StartMenu:
 
     student: str = "👨‍🎓 Мои классы"
-    teacher: str = "👨‍🏫 Личный кабинет"
+    personal: str = "👨‍🏫 Личный кабинет"
     settings: str = "⚙️ Настройки"
 
     @classmethod
@@ -30,20 +30,54 @@ class StartMenu:
 
         keyboard.add(
             KeyboardButton(text=cls.student),
-            KeyboardButton(text=cls.teacher),
+            KeyboardButton(text=cls.personal),
             KeyboardButton(text=cls.settings)
         )
 
         return keyboard
 
-class TeacherMenu:
+class ClassesMenu:
 
-    class_control: str = ""
+    @classmethod
+    def keyboard(cls) -> Union[InlineKeyboardMarkup]:
+        keyboard = default_inline_keyboard()
 
-class StudentMenu:
+        keyboard.add(
+            InlineKeyboardButton(text="✚ Добавить класс",
+                                 callback_data="classesmenu_add_class_callback"),
+            InlineKeyboardButton(text="🔗 Воспользоваться ссылкой-приглашением",
+                                 callback_data="classesmenu_link_callback")
+        )
 
-    my_stats: str = "📊 Моя успеваемость"
-    coming: str = "💥 Coming soon..."
+        return keyboard
+
+class PersonalMenu:
+
+    coming_soon: str = "🔥 Скоро..."
+
+    @classmethod
+    def keyboard(cls) -> Union[ReplyKeyboardMarkup]:
+        keyboard = default_keyboard()
+
+        keyboard.add(
+            KeyboardButton(text=cls.coming_soon)
+        )
+
+        return keyboard
+
+
+class SettingsMenu:
+    coming_soon: str = "🔥 Скоро..."
+
+    @classmethod
+    def keyboard(cls) -> Union[ReplyKeyboardMarkup]:
+        keyboard = default_keyboard()
+
+        keyboard.add(
+            KeyboardButton(text=cls.coming_soon)
+        )
+
+        return keyboard
 
 @dataclass(frozen=True)
 class StatsMenu:
