@@ -20,8 +20,9 @@ def default_inline_keyboard() -> InlineKeyboardMarkup:
 @dataclass(frozen=True)
 class StartMenu:
 
-    student: str = "👨‍🎓 Меню ученика"
-    teacher: str = "👨‍🏫 Меню учителя"
+    student: str = "👨‍🎓 Мои классы"
+    teacher: str = "👨‍🏫 Личный кабинет"
+    settings: str = "⚙️ Настройки"
 
     @classmethod
     def keyboard(cls) -> Union[ReplyKeyboardMarkup]:
@@ -29,13 +30,15 @@ class StartMenu:
 
         keyboard.add(
             KeyboardButton(text=cls.student),
-            KeyboardButton(text=cls.teacher)
+            KeyboardButton(text=cls.teacher),
+            KeyboardButton(text=cls.settings)
         )
 
         return keyboard
 
 class TeacherMenu:
-    pass
+
+    class_control: str = ""
 
 class StudentMenu:
 
