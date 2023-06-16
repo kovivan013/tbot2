@@ -43,9 +43,9 @@ class ClassesMenu:
         keyboard = default_inline_keyboard()
 
         keyboard.add(
-            InlineKeyboardButton(text="✚ Добавить класс",
+            InlineKeyboardButton(text="➕ Добавить новый класс",
                                  callback_data="classesmenu_add_class_callback"),
-            InlineKeyboardButton(text="🔗 Воспользоваться ссылкой-приглашением",
+            InlineKeyboardButton(text="🔗 Присоединиться к классу",
                                  callback_data="classesmenu_link_callback")
         )
 
