@@ -8,7 +8,7 @@ from tbot2.telegram_bot.decorators.decorators import private_message
 from tbot2.telegram_bot.handlers.debug_handlers import debug_handler
 
 
-async def main_menu(message: Message) -> None:
+async def main_menu(message: Message, state: FSMContext) -> None:
 
     await message.answer(text=f"*Главное меню:*",
                          reply_markup=StartMenu.keyboard(),
